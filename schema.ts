@@ -17,10 +17,11 @@ A field: The individual bits of data on your list, each with its own type.
 // we get these even before code runs.
 import { list } from "@keystone-6/core";
 
-import Book from "./schemas/Book";
 import User from "./schemas/User";
 import Post from "./schemas/Post";
 import Tag from "./schemas/Tag";
+import Book from "./schemas/Book";
+import Author from "./schemas/Author";
 
 // We have a users list, a blogs list, and tags for blog posts, so they can be filtered.
 // Each property on the exported object will become the name of a list (a.k.a. the `listKey`),
@@ -34,4 +35,5 @@ export const lists = {
   // Our final list is the tag list. This field is just a name and a relationship to posts
   Tag: list(Tag),
   Book: list(Book),
+  Author: list(Author),
 };

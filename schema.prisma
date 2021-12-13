@@ -39,7 +39,13 @@ model Tag {
 }
 
 model Book {
-  id     String @id @default(cuid())
-  title  String @default("")
-  author String @default("")
+  id      String   @id @default(cuid())
+  title   String   @default("")
+  authors Author[] @relation("Author_books")
+}
+
+model Author {
+  id    String @id @default(cuid())
+  name  String @default("")
+  books Book[] @relation("Author_books")
 }

@@ -306,7 +306,13 @@ input TagCreateInput {
 type Book {
   id: ID!
   title: String
-  author: String
+  authors(
+    where: AuthorWhereInput! = {}
+    orderBy: [AuthorOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Author!]
+  authorsCount(where: AuthorWhereInput! = {}): Int
 }
 
 input BookWhereUniqueInput {
@@ -319,18 +325,30 @@ input BookWhereInput {
   NOT: [BookWhereInput!]
   id: IDFilter
   title: StringFilter
-  author: StringFilter
+  authors: AuthorManyRelationFilter
+}
+
+input AuthorManyRelationFilter {
+  every: AuthorWhereInput
+  some: AuthorWhereInput
+  none: AuthorWhereInput
 }
 
 input BookOrderByInput {
   id: OrderDirection
   title: OrderDirection
-  author: OrderDirection
 }
 
 input BookUpdateInput {
   title: String
-  author: String
+  authors: AuthorRelateToManyForUpdateInput
+}
+
+input AuthorRelateToManyForUpdateInput {
+  disconnect: [AuthorWhereUniqueInput!]
+  set: [AuthorWhereUniqueInput!]
+  create: [AuthorCreateInput!]
+  connect: [AuthorWhereUniqueInput!]
 }
 
 input BookUpdateArgs {
@@ -340,7 +358,75 @@ input BookUpdateArgs {
 
 input BookCreateInput {
   title: String
-  author: String
+  authors: AuthorRelateToManyForCreateInput
+}
+
+input AuthorRelateToManyForCreateInput {
+  create: [AuthorCreateInput!]
+  connect: [AuthorWhereUniqueInput!]
+}
+
+type Author {
+  id: ID!
+  name: String
+  books(
+    where: BookWhereInput! = {}
+    orderBy: [BookOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Book!]
+  booksCount(where: BookWhereInput! = {}): Int
+}
+
+input AuthorWhereUniqueInput {
+  id: ID
+}
+
+input AuthorWhereInput {
+  AND: [AuthorWhereInput!]
+  OR: [AuthorWhereInput!]
+  NOT: [AuthorWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  books: BookManyRelationFilter
+}
+
+input BookManyRelationFilter {
+  every: BookWhereInput
+  some: BookWhereInput
+  none: BookWhereInput
+}
+
+input AuthorOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input AuthorUpdateInput {
+  name: String
+  books: BookRelateToManyForUpdateInput
+}
+
+input BookRelateToManyForUpdateInput {
+  disconnect: [BookWhereUniqueInput!]
+  set: [BookWhereUniqueInput!]
+  create: [BookCreateInput!]
+  connect: [BookWhereUniqueInput!]
+}
+
+input AuthorUpdateArgs {
+  where: AuthorWhereUniqueInput!
+  data: AuthorUpdateInput!
+}
+
+input AuthorCreateInput {
+  name: String
+  books: BookRelateToManyForCreateInput
+}
+
+input BookRelateToManyForCreateInput {
+  create: [BookCreateInput!]
+  connect: [BookWhereUniqueInput!]
 }
 
 """
@@ -376,6 +462,12 @@ type Mutation {
   updateBooks(data: [BookUpdateArgs!]!): [Book]
   deleteBook(where: BookWhereUniqueInput!): Book
   deleteBooks(where: [BookWhereUniqueInput!]!): [Book]
+  createAuthor(data: AuthorCreateInput!): Author
+  createAuthors(data: [AuthorCreateInput!]!): [Author]
+  updateAuthor(where: AuthorWhereUniqueInput!, data: AuthorUpdateInput!): Author
+  updateAuthors(data: [AuthorUpdateArgs!]!): [Author]
+  deleteAuthor(where: AuthorWhereUniqueInput!): Author
+  deleteAuthors(where: [AuthorWhereUniqueInput!]!): [Author]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -438,6 +530,14 @@ type Query {
   ): [Book!]
   book(where: BookWhereUniqueInput!): Book
   booksCount(where: BookWhereInput! = {}): Int
+  authors(
+    where: AuthorWhereInput! = {}
+    orderBy: [AuthorOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Author!]
+  author(where: AuthorWhereUniqueInput!): Author
+  authorsCount(where: AuthorWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
