@@ -37,3 +37,9 @@ model Tag {
   name  String @default("")
   posts Post[] @relation("Post_tags")
 }
+
+model Book {
+  id     String @id @default(cuid())
+  title  String @default("")
+  author String @default("")
+}

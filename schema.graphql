@@ -303,6 +303,46 @@ input TagCreateInput {
   posts: PostRelateToManyForCreateInput
 }
 
+type Book {
+  id: ID!
+  title: String
+  author: String
+}
+
+input BookWhereUniqueInput {
+  id: ID
+}
+
+input BookWhereInput {
+  AND: [BookWhereInput!]
+  OR: [BookWhereInput!]
+  NOT: [BookWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  author: StringFilter
+}
+
+input BookOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  author: OrderDirection
+}
+
+input BookUpdateInput {
+  title: String
+  author: String
+}
+
+input BookUpdateArgs {
+  where: BookWhereUniqueInput!
+  data: BookUpdateInput!
+}
+
+input BookCreateInput {
+  title: String
+  author: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -330,6 +370,12 @@ type Mutation {
   updateTags(data: [TagUpdateArgs!]!): [Tag]
   deleteTag(where: TagWhereUniqueInput!): Tag
   deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
+  createBook(data: BookCreateInput!): Book
+  createBooks(data: [BookCreateInput!]!): [Book]
+  updateBook(where: BookWhereUniqueInput!, data: BookUpdateInput!): Book
+  updateBooks(data: [BookUpdateArgs!]!): [Book]
+  deleteBook(where: BookWhereUniqueInput!): Book
+  deleteBooks(where: [BookWhereUniqueInput!]!): [Book]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -384,6 +430,14 @@ type Query {
   ): [Tag!]
   tag(where: TagWhereUniqueInput!): Tag
   tagsCount(where: TagWhereInput! = {}): Int
+  books(
+    where: BookWhereInput! = {}
+    orderBy: [BookOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Book!]
+  book(where: BookWhereUniqueInput!): Book
+  booksCount(where: BookWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
